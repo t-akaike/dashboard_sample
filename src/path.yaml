@@ -1,0 +1,7 @@
+src_path          : 'src'
+data_path         : 'data'
+input_path        : 'data/input'
+input_raw_path    : 'data/input/raw'
+input_unzip_path  : 'data/input/unzip'
+output_path       : 'data/output'
+log_path          : 'log'
