@@ -12,5 +12,6 @@
 
 ## 実行手順
 1. 上記データを該当のパスに配置
-2. `dashboard_sample/src/preprocess.py`を実行
-3. `streamlit run src/main.py`を実行
+2. 【テストデータ作成】`dashboard_sample/src/preprocess.py`を実行
+3. 【設定ファイル修正】`dashboard_sample/src/settings.yaml`に実行したいファイル名などを記載
+4. `streamlit run src/main.py`を実行
