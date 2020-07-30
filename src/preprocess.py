@@ -7,21 +7,20 @@ import re
 import pandas as pd
 import util
 
+# パス取得
+paths             = util.get_paths()
+data_path         = paths['data_path']
+input_path        = paths['input_path']
+input_raw_path    = paths['input_raw_path']
+input_unzip_path  = paths['input_unzip_path']
+output_csv_path   = paths['output_csv_path']
 
-def main():
+
+def merge_data():
     """
     ### サンプルデータ作成
     - kaggleのリクルートホールディングスのデータを加工
     """
-
-    # パス取得
-    paths             = util.get_paths()
-    data_path         = paths['data_path']
-    input_path        = paths['input_path']
-    input_raw_path    = paths['input_raw_path']
-    input_unzip_path  = paths['input_unzip_path']
-    output_csv_path   = paths['output_csv_path']
-
     # データ解凍・読み込み
     for fname in ['air_visit_data', 'air_store_info']:
         util.unzip(f'{input_raw_path}/{fname}.csv.zip', input_unzip_path)
@@ -49,5 +48,27 @@ def main():
     )
 
 
+def aggregate():
+    df = pd.read_csv(f'{output_csv_path}/sample.csv')
+
+    # 任意の範囲を1日おきに
+    start = df['visit_date'].min()
+    end   = df['visit_date'].max()
+    df_date = pd.DataFrame(
+        data=pd.date_range(start, end, freq='D'),
+        columns=['visit_date']
+    ).set_index('visit_date')
+
+    (
+        df
+        .groupby(['pref_name', 'air_genre_name', 'visit_date'])
+        [['visitors']]
+        .sum()
+        .merge(df_date, left_index=True, right_index=True, how='right')
+        .to_csv(f'{output_csv_path}/aggregate.csv')
+    )
+
+
 if __name__ == '__main__':
-    main()
+    merge_data()
+    aggregate()
