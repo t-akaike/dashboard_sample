@@ -18,7 +18,7 @@ def main():
 
     # セレクトボックス作成
     pref_list  = [''] + df_org['pref_name'].unique().tolist()
-    genre_list = [''] + df_org['air_genre_name'].unique().tolist()
+    genre_list = df_org['air_genre_name'].unique().tolist()
     pref  = st.sidebar.selectbox('都道府県', pref_list)
     genre = st.sidebar.multiselect('ジャンル', genre_list, default=genre_list)
 

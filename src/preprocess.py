@@ -45,7 +45,7 @@ def main():
             .str.replace('Niigata-ken'  , '新潟県')
             .str.replace('Miyagi-ken'   , '宮城県')
         )
-        .to_csv(f'{output_path}/sample_.csv', index=False)
+        .to_csv(f'{output_path}/sample.csv', index=False)
     )
 
 
