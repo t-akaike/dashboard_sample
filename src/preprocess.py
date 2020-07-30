@@ -13,7 +13,6 @@ data_path         = paths['data_path']
 input_path        = paths['input_path']
 input_raw_path    = paths['input_raw_path']
 input_unzip_path  = paths['input_unzip_path']
-output_csv_path   = paths['output_csv_path']
 
 
 def merge_data():
@@ -44,12 +43,12 @@ def merge_data():
             .str.replace('Niigata-ken'  , '新潟県')
             .str.replace('Miyagi-ken'   , '宮城県')
         )
-        .to_csv(f'{output_csv_path}/sample.csv', index=False)
+        .to_csv(f'{input_path}/sample.csv', index=False)
     )
 
 
 def aggregate():
-    df = pd.read_csv(f'{output_csv_path}/sample.csv')
+    df = pd.read_csv(f'{input_path}/sample.csv')
 
     # 任意の範囲を1日おきに
     start = df['visit_date'].min()
@@ -65,7 +64,7 @@ def aggregate():
         [['visitors']]
         .sum()
         .merge(df_date, left_index=True, right_index=True, how='right')
-        .to_csv(f'{output_csv_path}/aggregate.csv')
+        .to_csv(f'{input_path}/aggregate.csv')
     )
 
 
