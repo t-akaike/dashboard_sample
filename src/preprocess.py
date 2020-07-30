@@ -20,7 +20,7 @@ def main():
     input_path        = paths['input_path']
     input_raw_path    = paths['input_raw_path']
     input_unzip_path  = paths['input_unzip_path']
-    output_path       = paths['output_path']
+    output_csv_path   = paths['output_csv_path']
 
     # データ解凍・読み込み
     for fname in ['air_visit_data', 'air_store_info']:
@@ -45,7 +45,7 @@ def main():
             .str.replace('Niigata-ken'  , '新潟県')
             .str.replace('Miyagi-ken'   , '宮城県')
         )
-        .to_csv(f'{output_path}/sample.csv', index=False)
+        .to_csv(f'{output_csv_path}/sample.csv', index=False)
     )
 
 
