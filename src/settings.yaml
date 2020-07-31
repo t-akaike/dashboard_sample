@@ -3,8 +3,10 @@ index_col : 'visit_date'     # プロット時のインデックスのカラム
 col_info  :                  # カラムの情報
     pref_name:
         - selectbox
+        # - multiselect
         - 都道府県
     air_genre_name:
         - multiselect
+        # - radio
         - ジャンル
 title     : '店舗への訪問者数'  # ダッシュボードのタイトル

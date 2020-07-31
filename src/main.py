@@ -41,7 +41,6 @@ def select_widget_type(display_name, wtype, _list):
     """
     指定したウィジェットの設置、選択中の値とクエリのテンプレの出力
     """
-    # TODO: ウィジェットの追加
     if wtype == 'selectbox':
         _list = [''] + _list
         selected_val = st.sidebar.selectbox(display_name, _list)
@@ -49,6 +48,9 @@ def select_widget_type(display_name, wtype, _list):
     elif wtype == 'multiselect':
         selected_val = st.sidebar.multiselect(display_name, _list, default=_list)
         query_tmpl = '{} in ({})'
+    elif wtype == 'radio':
+        selected_val = st.sidebar.radio(display_name, _list)
+        query_tmpl = '{} == "{}"'
     return selected_val, query_tmpl
 
 
@@ -69,29 +71,28 @@ def main():
 
     # データ読み込み
     df = pd.read_csv(f'{input_path}/{fname}')
+
+    # ウィジェット、クエリ作成
     for column in col_info:
         wtype, display_name = col_info[column]
         selected_val, query = set_widget(df, column, wtype, display_name)  # ウィジェット配置
         value_list.append(selected_val)                                    # 選択中の値保存
         if query != '':
             query_list.append(query)                                       # クエリ生成
-
     # 表の絞り込み
-    if len(query_list) == 0:
-        _df = df.copy()
-    else:
-        _df = df.query(' and '.join(query_list))
+    if len(query_list) > 0:
+        df = df.query(' and '.join(query_list))
 
     # ダッシュボードのタイトル・表出力
-    st.header(title)
-    st.write(_df)
+    st.title(title)
+    st.write(df)
 
     # グラフ
-    fig = plt.figure()
+    fig = plt.figure(figsize=(13, 5))
     ax = fig.add_subplot(1, 1, 1)
     if len(widget_col_list) > 0:
-        _df = _df.drop(widget_col_list, axis=1)
-    _df.groupby(index_col).sum().plot(ax=ax)  # ここを取り換えればいろいろ可視化できるはず
+        df = df.drop(widget_col_list, axis=1)
+    df.groupby(index_col).sum().plot(ax=ax)  # ここを取り換えればいろいろ可視化できるはず
     st.pyplot(fig)
 
     # 表示中の表・グラフを保存
@@ -104,12 +105,13 @@ def main():
                 value_list[i] = '_'.join(value_list[i]).replace('/', '')
         selected = '_'.join(value_list)
 
-        _df.to_csv(
+        df.to_csv(
             f'{output_csv_path}/{title}_{selected}.csv',
             index=False,
             encoding='sjis'
         )
         fig.savefig(f'{output_fig_path}/{title}_{selected}.png')
+        st.sidebar.success('done')
 
 
 if __name__ == '__main__':
